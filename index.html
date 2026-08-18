@@ -785,11 +785,87 @@ function launchConfetti(){
   }
 }
 
+// ── Gentle Firework Sounds ──
+function playBurst(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.35,audioCtx.sampleRate);
+  const data=buf.getChannelData(0);
+  for(let i=0;i<data.length;i++){
+    const t=i/audioCtx.sampleRate;
+    const env=Math.exp(-t*12);
+    data[i]=(Math.random()*2-1)*env*0.4;
+    if(Math.random()<0.02) data[i]+=((Math.random()*2-1)*env*0.6);
+  }
+  const src=audioCtx.createBufferSource();
+  src.buffer=buf;
+  const filt=audioCtx.createBiquadFilter();
+  filt.type='bandpass';
+  filt.frequency.value=800+Math.random()*2000;
+  filt.Q.value=0.5;
+  const gain=audioCtx.createGain();
+  gain.gain.value=0.08+Math.random()*0.06;
+  src.connect(filt);filt.connect(gain);gain.connect(audioCtx.destination);
+  src.start();
+}
+
+function playWhoosh(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type='sine';
+  osc.frequency.setValueAtTime(200,audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(600+Math.random()*400,audioCtx.currentTime+0.15);
+  osc.frequency.exponentialRampToValueAtTime(100,audioCtx.currentTime+0.4);
+  gain.gain.setValueAtTime(0,audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.04,audioCtx.currentTime+0.05);
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.start();osc.stop(audioCtx.currentTime+0.45);
+}
+
+function playCrackle(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const len=0.6+Math.random()*0.4;
+  const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*len,audioCtx.sampleRate);
+  const data=buf.getChannelData(0);
+  for(let i=0;i<data.length;i++){
+    const t=i/audioCtx.sampleRate;
+    data[i]=0;
+    if(Math.random()<0.008){
+      const snap=Math.exp(-(t-i/audioCtx.sampleRate)*50)*0.3;
+      for(let j=0;j<200&&(i+j)<data.length;j++){
+        data[i+j]+=(Math.random()*2-1)*snap*Math.exp(-j*0.05);
+      }
+    }
+  }
+  const src=audioCtx.createBufferSource();
+  src.buffer=buf;
+  const gain=audioCtx.createGain();
+  gain.gain.value=0.1;
+  const filt=audioCtx.createBiquadFilter();
+  filt.type='highpass';filt.frequency.value=2000;
+  src.connect(filt);filt.connect(gain);gain.connect(audioCtx.destination);
+  src.start();
+}
+
+function startFireworkSounds(){
+  let count=0;
+  const interval=setInterval(()=>{
+    const r=Math.random();
+    if(r<0.4) playBurst();
+    else if(r<0.7){ playWhoosh(); setTimeout(playBurst,150+Math.random()*100); }
+    else playCrackle();
+    count++;
+    if(count>30) clearInterval(interval);
+  },280+Math.random()*200);
+}
+
 // ── Surprise ──
 function triggerSurprise(){
   document.getElementById('surprisePrompt').style.display='none';
   document.getElementById('surpriseContent').style.display='block';
   startFireworks();
+  startFireworkSounds();
   launchConfetti();
   setTimeout(launchConfetti,2000);
   setTimeout(launchConfetti,4000);
