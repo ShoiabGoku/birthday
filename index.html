@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Prathima</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:#0a0a0f;
+  color:#f5e6d3;
+  font-family:'Poppins',sans-serif;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ── Landing Screen ── */
+#landing{
+  position:fixed;inset:0;z-index:1000;
+  background:radial-gradient(ellipse at center,#1a0a2e 0%,#0a0a0f 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1.2s ease,transform 1.2s ease;
+}
+#landing.hide{opacity:0;pointer-events:none;transform:scale(1.1)}
+#landing h1{
+  font-family:'Great Vibes',cursive;font-size:clamp(2.5rem,8vw,5rem);
+  background:linear-gradient(135deg,#f0c27f,#fc5c7d,#f0c27f);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 3s ease-in-out infinite;
+  text-align:center;
+}
+#landing p{
+  margin-top:1.5rem;font-size:1.1rem;color:#c9a0dc;
+  letter-spacing:3px;text-transform:uppercase;
+  animation:pulse 2s ease-in-out infinite;
+}
+#enterBtn{
+  margin-top:2.5rem;padding:14px 48px;
+  background:linear-gradient(135deg,#fc5c7d,#6a82fb);
+  border:none;border-radius:50px;color:#fff;
+  font-family:'Poppins',sans-serif;font-size:1rem;font-weight:500;
+  cursor:pointer;letter-spacing:2px;
+  transition:transform .3s,box-shadow .3s;
+  box-shadow:0 4px 30px rgba(252,92,125,.4);
+}
+#enterBtn:hover{transform:scale(1.08);box-shadow:0 6px 40px rgba(252,92,125,.6)}
+
+@keyframes shimmer{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.3)}
+}
+@keyframes pulse{
+  0%,100%{opacity:.6}50%{opacity:1}
+}
+
+/* ── Floating Petals ── */
+.petal{
+  position:fixed;pointer-events:none;z-index:999;
+  width:20px;height:20px;
+  background:radial-gradient(ellipse,#ffb6c1,#ff69b4);
+  border-radius:50% 0 50% 50%;opacity:.7;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  0%{transform:translateY(-10vh) rotate(0deg);opacity:.8}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ── Main Content ── */
+#mainContent{
+  display:none;opacity:0;
+  transition:opacity 1s ease;
+}
+#mainContent.show{display:block;opacity:1}
+
+/* ── Music Toggle ── */
+#musicToggle{
+  position:fixed;top:20px;right:20px;z-index:500;
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.2);
+  color:#f5e6d3;font-size:1.4rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s,background .3s;
+}
+#musicToggle:hover{transform:scale(1.1);background:rgba(255,255,255,.2)}
+#musicToggle.playing{animation:musicPulse 1s ease-in-out infinite}
+@keyframes musicPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(252,92,125,.4)}
+  50%{box-shadow:0 0 0 15px rgba(252,92,125,0)}
+}
+
+/* ── Sections ── */
+section{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 20px;position:relative;
+}
+
+/* ── Hero Section ── */
+#hero{
+  background:radial-gradient(ellipse at 50% 30%,#1a0a2e 0%,#0a0a0f 60%);
+  text-align:center;
+}
+.stars{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+}
+.star{
+  position:absolute;width:3px;height:3px;
+  background:#fff;border-radius:50%;
+  animation:twinkle 2s ease-in-out infinite alternate;
+}
+@keyframes twinkle{0%{opacity:.2;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}
+
+.hero-subtitle{
+  font-size:clamp(1rem,3vw,1.4rem);color:#c9a0dc;
+  letter-spacing:5px;text-transform:uppercase;
+  margin-bottom:1rem;
+  opacity:0;animation:fadeUp .8s ease forwards .5s;
+}
+.hero-title{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(3rem,10vw,7rem);
+  background:linear-gradient(135deg,#f7971e,#ffd200,#fc5c7d,#f7971e);
+  background-size:300% 300%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradientFlow 4s ease infinite,fadeUp 1s ease forwards .8s;
+  opacity:0;line-height:1.2;
+}
+.hero-name{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(2rem,6vw,4rem);
+  color:#ffd700;margin-top:.5rem;
+  opacity:0;animation:fadeUp 1s ease forwards 1.2s;
+  text-shadow:0 0 40px rgba(255,215,0,.3);
+}
+@keyframes gradientFlow{
+  0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Letter Section ── */
+#letter{
+  background:linear-gradient(180deg,#0a0a0f 0%,#1a0f2e 50%,#0a0a0f 100%);
+}
+.letter-container{
+  max-width:700px;width:100%;
+  background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,215,0,.15);
+  border-radius:20px;padding:clamp(30px,5vw,50px);
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.letter-container::before{
+  content:'';position:absolute;top:-1px;left:20%;right:20%;height:2px;
+  background:linear-gradient(90deg,transparent,#ffd700,transparent);
+}
+.letter-header{
+  font-family:'Great Vibes',cursive;font-size:clamp(1.8rem,4vw,2.5rem);
+  color:#ffd700;margin-bottom:1.5rem;text-align:center;
+}
+.letter-body{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.95rem,2.5vw,1.1rem);
+  line-height:1.9;color:#e8d5c4;
+  text-align:left;
+}
+.letter-body p{margin-bottom:1.2rem}
+.letter-sign{
+  font-family:'Great Vibes',cursive;font-size:1.8rem;
+  color:#fc5c7d;text-align:right;margin-top:2rem;
+}
+
+/* ── Envelope Cards ── */
+#cards{
+  background:linear-gradient(180deg,#0a0a0f,#0f0a1e,#0a0a0f);
+}
+.cards-title{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(2rem,5vw,3rem);
+  color:#ffd700;margin-bottom:3rem;text-align:center;
+}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;max-width:900px;width:100%;
+}
+.envelope{
+  perspective:800px;cursor:pointer;
+  height:220px;
+}
+.envelope-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .8s cubic-bezier(.4,.2,.2,1);
+  transform-style:preserve-3d;
+}
+.envelope.opened .envelope-inner{transform:rotateY(180deg)}
+.envelope-front,.envelope-back{
+  position:absolute;inset:0;
+  border-radius:16px;padding:30px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  backface-visibility:hidden;
+}
+.envelope-front{
+  background:linear-gradient(135deg,#2a1a3e,#1a0f2e);
+  border:1px solid rgba(255,215,0,.2);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+.envelope-front .icon{font-size:2.5rem;margin-bottom:12px}
+.envelope-front .label{
+  font-size:.9rem;color:#c9a0dc;letter-spacing:2px;text-transform:uppercase;
+}
+.envelope-front::after{
+  content:'tap to open';position:absolute;bottom:15px;
+  font-size:.7rem;color:rgba(255,215,0,.4);letter-spacing:1px;
+}
+.envelope-back{
+  background:linear-gradient(135deg,#1a0f2e,#2a1a3e);
+  border:1px solid rgba(252,92,125,.2);
+  transform:rotateY(180deg);
+  text-align:center;
+  box-shadow:0 10px 30px rgba(252,92,125,.15);
+}
+.envelope-back .msg{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.85rem,2vw,1rem);line-height:1.7;color:#f5e6d3;
+}
+
+/* ── Photo Sections ── */
+.photo-section{
+  padding:80px 20px;min-height:auto;
+}
+.photo-frame{
+  max-width:420px;width:100%;position:relative;
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  margin-bottom:2rem;
+}
+.photo-frame img{width:100%;display:block}
+.photo-frame::before{
+  content:'';position:absolute;inset:0;
+  border:2px solid rgba(255,215,0,.2);border-radius:20px;
+  pointer-events:none;z-index:1;
+}
+.photo-caption{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(1rem,3vw,1.3rem);
+  color:#e8d5c4;text-align:center;
+  max-width:500px;line-height:1.8;
+}
+.photo-caption.highlight{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(1.5rem,4vw,2.2rem);
+  color:#fc5c7d;font-style:normal;
+}
+
+/* ── Flower Section ── */
+#flowerSection{
+  background:radial-gradient(ellipse at center,#1e0a2e 0%,#0a0a0f 70%);
+}
+.flower-glow{
+  position:absolute;width:400px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,182,193,.1),transparent 70%);
+  pointer-events:none;
+}
+
+/* ── Together Section ── */
+#togetherSection{
+  background:linear-gradient(180deg,#0a0a0f,#0f1a2e,#0a0a0f);
+}
+
+/* ── Surprise Section ── */
+#surprise{
+  background:radial-gradient(ellipse at center,#1a0a2e,#0a0a0f);
+  min-height:100vh;position:relative;overflow:hidden;
+}
+#surpriseBtn{
+  padding:18px 50px;
+  background:linear-gradient(135deg,#ffd700,#ff6b6b,#ffd700);
+  background-size:200% 200%;
+  animation:gradientFlow 3s ease infinite;
+  border:none;border-radius:50px;
+  font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:600;
+  color:#1a0a2e;cursor:pointer;
+  letter-spacing:2px;text-transform:uppercase;
+  box-shadow:0 5px 30px rgba(255,215,0,.4);
+  transition:transform .3s;
+}
+#surpriseBtn:hover{transform:scale(1.08)}
+#surpriseContent{
+  display:none;text-align:center;
+  animation:fadeUp 1s ease forwards;
+}
+#surpriseContent .big-wish{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(2.5rem,8vw,5rem);
+  background:linear-gradient(135deg,#ffd700,#ff6b6b,#ffd700,#ff6b6b);
+  background-size:300%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradientFlow 3s ease infinite;
+  margin-bottom:2rem;
+}
+#surpriseContent .final-msg{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,3vw,1.3rem);
+  color:#e8d5c4;max-width:600px;
+  line-height:2;margin:0 auto 2rem;
+}
+.cake{font-size:clamp(4rem,10vw,8rem);margin-bottom:1.5rem}
+
+/* ── Fireworks Canvas ── */
+#fireworksCanvas{
+  position:fixed;inset:0;pointer-events:none;z-index:998;
+  display:none;
+}
+
+/* ── Confetti ── */
+.confetti{
+  position:fixed;pointer-events:none;z-index:997;
+  width:10px;height:10px;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-10vh) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(1080deg);opacity:0}
+}
+
+/* ── Scroll animations ── */
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .cards-grid{grid-template-columns:1fr}
+  .envelope{height:200px}
+  section{padding:40px 15px}
+  .letter-container{padding:25px}
+}
+
+/* ── Scroll indicator ── */
+.scroll-hint{
+  position:absolute;bottom:30px;
+  display:flex;flex-direction:column;align-items:center;
+  animation:bounce 2s ease-in-out infinite;
+}
+.scroll-hint span{font-size:.75rem;color:#c9a0dc;letter-spacing:2px;margin-bottom:8px}
+.scroll-hint .arrow{
+  width:24px;height:24px;border-right:2px solid #c9a0dc;
+  border-bottom:2px solid #c9a0dc;transform:rotate(45deg);
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}
+}
+
+/* ── Footer ── */
+footer{
+  text-align:center;padding:40px 20px;
+  background:#0a0a0f;
+  color:rgba(255,255,255,.3);font-size:.8rem;
+}
+footer span{color:#fc5c7d}
+</style>
+</head>
+<body>
+
+<!-- Landing Screen -->
+<div id="landing">
+  <h1>You Have a Special Delivery</h1>
+  <p>A little late, but from the heart</p>
+  <button id="enterBtn" onclick="enterSite()">Open</button>
+</div>
+
+<!-- Music Toggle -->
+<button id="musicToggle" onclick="toggleMusic()" title="Toggle Music">&#9835;</button>
+
+<!-- Floating Petals Container -->
+<div id="petals"></div>
+
+<!-- Fireworks Canvas -->
+<canvas id="fireworksCanvas"></canvas>
+
+<!-- Main Content -->
+<div id="mainContent">
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="stars" id="starsContainer"></div>
+    <p class="hero-subtitle">Wishing the happiest birthday to</p>
+    <h1 class="hero-title">Happy Birthday</h1>
+    <p class="hero-name">Prathima</p>
+    <div class="scroll-hint">
+      <span>scroll</span>
+      <div class="arrow"></div>
+    </div>
+  </section>
+
+  <!-- The Letter -->
+  <section id="letter">
+    <div class="letter-container reveal">
+      <h2 class="letter-header">Dear Prathima,</h2>
+      <div class="letter-body">
+        <p>I know this wish comes a little late, and honestly, I feel terrible about it. You deserved to hear it right at midnight, but here I am, fashionably late as always. I guess some things never change.</p>
+        <p>The truth is, I've been so caught up in the chaos of life &mdash; duniyavi kaam, deadlines, the never-ending hustle &mdash; that I forgot to pause for the people who actually matter. And you, Prathima, you matter more than you probably know.</p>
+        <p>You're one of the best people I've ever met. Not because you're perfect, but because you're genuinely, unapologetically you. Your smile, your warmth, your way of making everyone around you feel seen &mdash; that's rare. And I don't say that lightly.</p>
+        <p>I've always wanted to share more with you &mdash; more conversations, more time, more of those moments that make life worth remembering. But somehow, the right time never came, or maybe I never made the time. That's on me, and I'm sorry for that.</p>
+        <p>So here's me, trying to make up for lost time, one belated birthday wish at a time.</p>
+      </div>
+      <p class="letter-sign">With love & a little guilt &#10084;</p>
+    </div>
+  </section>
+
+  <!-- Clickable Envelope Cards -->
+  <section id="cards">
+    <h2 class="cards-title reveal">Some Things I Want You to Know</h2>
+    <div class="cards-grid">
+      <div class="envelope reveal" onclick="this.classList.toggle('opened')">
+        <div class="envelope-inner">
+          <div class="envelope-front">
+            <span class="icon">&#128140;</span>
+            <span class="label">A Confession</span>
+          </div>
+          <div class="envelope-back">
+            <p class="msg">One of the perks of being me is that I absolutely don't understand girls. I don't know what you like, what you dislike, what makes you laugh, or what annoys you. But I want to learn. I want to know your favourite song, the book that changed your mind, the little things that make your day. I'm trying, Prathima. Bear with me.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="envelope reveal" onclick="this.classList.toggle('opened')">
+        <div class="envelope-inner">
+          <div class="envelope-front">
+            <span class="icon">&#127801;</span>
+            <span class="label">A Memory</span>
+          </div>
+          <div class="envelope-back">
+            <p class="msg">Remember this flower? It wasn't the most expensive gift or the grandest gesture. But it was real. Just like this friendship. Some things don't need to be loud to mean something &mdash; they just need to be honest.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="envelope reveal" onclick="this.classList.toggle('opened')">
+        <div class="envelope-inner">
+          <div class="envelope-front">
+            <span class="icon">&#127775;</span>
+            <span class="label">A Promise</span>
+          </div>
+          <div class="envelope-back">
+            <p class="msg">I promise to be a better friend. To show up more, to listen more, to not let the world's noise drown out the people who matter. You deserve friends who make time, not excuses. And I'm going to be that friend. Starting now.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="envelope reveal" onclick="this.classList.toggle('opened')">
+        <div class="envelope-inner">
+          <div class="envelope-front">
+            <span class="icon">&#128588;</span>
+            <span class="label">A Wish</span>
+          </div>
+          <div class="envelope-back">
+            <p class="msg">I wish you a year full of everything your heart desires &mdash; success that surprises you, love that stays, adventures that take your breath away, and peace that settles deep. You deserve the world, Prathima. Never settle for less.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flower Photo -->
+  <section id="flowerSection" class="photo-section">
+    <div class="flower-glow"></div>
+    <div class="photo-frame reveal">
+      <img src="images/flower.jpg" alt="The flower I gave you" loading="lazy">
+    </div>
+    <p class="photo-caption reveal" style="margin-top:1.5rem">
+      This little pink rose &mdash; it wasn't much, but it carried a lot of unsaid things.
+      Some gestures are small, but they hold entire conversations.
+    </p>
+    <p class="photo-caption highlight reveal" style="margin-top:1rem">
+      "Some flowers bloom quietly, and still change the whole garden."
+    </p>
+  </section>
+
+  <!-- Together Photo -->
+  <section id="togetherSection" class="photo-section">
+    <div class="photo-frame reveal">
+      <img src="images/together.jpg" alt="Us at sunset" loading="lazy">
+    </div>
+    <p class="photo-caption reveal" style="margin-top:1.5rem">
+      Golden hour, hilltop, and good company &mdash;<br>
+      some memories don't need a caption, they just glow on their own.
+    </p>
+    <p class="photo-caption highlight reveal" style="margin-top:1rem">
+      Here's to many more sunsets and stories.
+    </p>
+  </section>
+
+  <!-- Graduation Photo -->
+  <section class="photo-section" style="background:linear-gradient(180deg,#0a0a0f,#1a0f2e,#0a0a0f)">
+    <div class="photo-frame reveal">
+      <img src="images/prathima.png" alt="Prathima - Graduation" loading="lazy">
+    </div>
+    <p class="photo-caption reveal" style="margin-top:1.5rem">
+      College of Engineering, Pune. That proud smile holding your degree &mdash;
+      you worked hard for this, and it shows.
+    </p>
+    <p class="photo-caption highlight reveal" style="margin-top:1rem">
+      The world better watch out. You're just getting started.
+    </p>
+  </section>
+
+  <!-- Surprise Section -->
+  <section id="surprise">
+    <div id="surprisePrompt" class="reveal">
+      <p style="font-family:'Playfair Display',serif;font-size:1.2rem;color:#c9a0dc;margin-bottom:2rem;letter-spacing:1px">
+        One last thing before you go...
+      </p>
+      <button id="surpriseBtn" onclick="triggerSurprise()">Tap for a Surprise</button>
+    </div>
+    <div id="surpriseContent">
+      <div class="cake">&#127874;</div>
+      <h2 class="big-wish">Happy Birthday, Prathima!</h2>
+      <p class="final-msg">
+        Late wishes, messy confessions, and a whole lot of heart &mdash;
+        that's all I've got. But it's yours.<br><br>
+        I may not always say the right things, or show up on time,
+        or understand half the things going on in your world &mdash;
+        but one thing I know for sure:<br><br>
+        <strong style="color:#ffd700">You're one of the best humans I've ever known.</strong><br><br>
+        Always be you. Always be kind. Always be brilliant.<br>
+        And always be my friend.<br><br>
+        &#10084; Here's to you, today and every day.
+      </p>
+      <p style="font-family:'Great Vibes',cursive;font-size:2rem;color:#fc5c7d;margin-top:2rem">
+        &mdash; Your friend who's always trying
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    Made with <span>&#10084;</span> and a lot of overdue feelings
+  </footer>
+</div>
+
+<script>
+// ── Stars ──
+(function(){
+  const c=document.getElementById('starsContainer');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.width=s.style.height=Math.random()*3+1+'px';
+    s.style.animationDelay=Math.random()*3+'s';
+    s.style.animationDuration=Math.random()*2+1.5+'s';
+    c.appendChild(s);
+  }
+})();
+
+// ── Floating Petals ──
+function createPetal(){
+  const p=document.createElement('div');
+  p.className='petal';
+  p.style.left=Math.random()*100+'%';
+  p.style.animationDuration=Math.random()*5+6+'s';
+  p.style.animationDelay=Math.random()*3+'s';
+  const size=Math.random()*15+8;
+  p.style.width=size+'px';p.style.height=size+'px';
+  p.style.opacity=Math.random()*.5+.2;
+  const hue=Math.random()*30+330;
+  p.style.background=`radial-gradient(ellipse,hsl(${hue},80%,75%),hsl(${hue},70%,60%))`;
+  document.getElementById('petals').appendChild(p);
+  p.addEventListener('animationend',()=>p.remove());
+}
+setInterval(createPetal,400);
+
+// ── Web Audio API Music ──
+let audioCtx, musicPlaying=false, musicNodes=[];
+
+function createMusic(){
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const master=audioCtx.createGain();
+  master.gain.value=0.12;
+  master.connect(audioCtx.destination);
+
+  // Warm pad
+  const pad=audioCtx.createOscillator();
+  const padGain=audioCtx.createGain();
+  const padFilter=audioCtx.createBiquadFilter();
+  pad.type='sine';pad.frequency.value=220;
+  padFilter.type='lowpass';padFilter.frequency.value=800;
+  padGain.gain.value=0.3;
+  pad.connect(padFilter);padFilter.connect(padGain);padGain.connect(master);
+  pad.start();
+  musicNodes.push(pad);
+
+  // Pad 2
+  const pad2=audioCtx.createOscillator();
+  const pad2Gain=audioCtx.createGain();
+  pad2.type='sine';pad2.frequency.value=277.18;
+  pad2Gain.gain.value=0.2;
+  pad2.connect(pad2Gain);pad2Gain.connect(master);
+  pad2.start();
+  musicNodes.push(pad2);
+
+  // Gentle melody
+  const melody=[
+    329.63,392.00,440.00,523.25,493.88,440.00,392.00,349.23,
+    329.63,293.66,329.63,392.00,440.00,493.88,523.25,493.88,
+    440.00,392.00,349.23,329.63,293.66,261.63,293.66,329.63,
+    349.23,392.00,440.00,392.00,349.23,329.63,293.66,329.63
+  ];
+  const melOsc=audioCtx.createOscillator();
+  const melGain=audioCtx.createGain();
+  const melFilter=audioCtx.createBiquadFilter();
+  melOsc.type='triangle';
+  melFilter.type='lowpass';melFilter.frequency.value=1200;
+  melGain.gain.value=0;
+  melOsc.connect(melFilter);melFilter.connect(melGain);melGain.connect(master);
+  melOsc.start();
+  musicNodes.push(melOsc);
+
+  let noteIdx=0;
+  function playNote(){
+    if(!musicPlaying)return;
+    const freq=melody[noteIdx%melody.length];
+    melOsc.frequency.setTargetAtTime(freq,audioCtx.currentTime,0.05);
+    melGain.gain.setTargetAtTime(0.35,audioCtx.currentTime,0.05);
+    melGain.gain.setTargetAtTime(0.05,audioCtx.currentTime+0.6,0.3);
+    noteIdx++;
+    setTimeout(playNote,800);
+  }
+  playNote();
+
+  // Gentle chord changes for pad
+  const chords=[
+    [220,277.18],[246.94,311.13],[261.63,329.63],[220,277.18]
+  ];
+  let chordIdx=0;
+  function changeChord(){
+    if(!musicPlaying)return;
+    const ch=chords[chordIdx%chords.length];
+    pad.frequency.setTargetAtTime(ch[0],audioCtx.currentTime,0.5);
+    pad2.frequency.setTargetAtTime(ch[1],audioCtx.currentTime,0.5);
+    chordIdx++;
+    setTimeout(changeChord,3200);
+  }
+  changeChord();
+}
+
+function toggleMusic(){
+  const btn=document.getElementById('musicToggle');
+  if(!musicPlaying){
+    if(!audioCtx)createMusic();
+    else audioCtx.resume();
+    musicPlaying=true;
+    btn.classList.add('playing');
+    btn.innerHTML='&#9835;';
+  }else{
+    musicPlaying=false;
+    if(audioCtx)audioCtx.suspend();
+    btn.classList.remove('playing');
+    btn.innerHTML='&#9834;';
+  }
+}
+
+// ── Enter Site ──
+function enterSite(){
+  document.getElementById('landing').classList.add('hide');
+  const mc=document.getElementById('mainContent');
+  mc.style.display='block';
+  requestAnimationFrame(()=>{mc.classList.add('show')});
+  setTimeout(()=>{
+    document.getElementById('landing').style.display='none';
+    if(!musicPlaying){
+      createMusic();
+      musicPlaying=true;
+      document.getElementById('musicToggle').classList.add('playing');
+    }
+  },1200);
+}
+
+// ── Scroll Reveal ──
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting)e.target.classList.add('visible');
+  });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ── Fireworks ──
+const fwCanvas=document.getElementById('fireworksCanvas');
+const fwCtx=fwCanvas.getContext('2d');
+let fireworks=[],particles=[];
+
+function resizeCanvas(){
+  fwCanvas.width=window.innerWidth;
+  fwCanvas.height=window.innerHeight;
+}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+class Particle{
+  constructor(x,y,color){
+    this.x=x;this.y=y;this.color=color;
+    const angle=Math.random()*Math.PI*2;
+    const speed=Math.random()*5+2;
+    this.vx=Math.cos(angle)*speed;
+    this.vy=Math.sin(angle)*speed;
+    this.alpha=1;this.decay=Math.random()*.02+.015;
+    this.size=Math.random()*3+1;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    this.vy+=.05;this.alpha-=this.decay;
+  }
+  draw(ctx){
+    ctx.save();ctx.globalAlpha=this.alpha;
+    ctx.fillStyle=this.color;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();ctx.restore();
+  }
+}
+
+function launchFirework(){
+  const x=Math.random()*fwCanvas.width;
+  const y=Math.random()*fwCanvas.height*.5;
+  const colors=['#ff6b6b','#ffd700','#ff69b4','#6a82fb','#fc5c7d','#f0c27f','#00ff88','#ff4757'];
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  for(let i=0;i<40;i++){
+    particles.push(new Particle(x,y,color));
+  }
+}
+
+let fwAnimating=false;
+function animateFireworks(){
+  if(!fwAnimating)return;
+  fwCtx.fillStyle='rgba(0,0,0,0.15)';
+  fwCtx.fillRect(0,0,fwCanvas.width,fwCanvas.height);
+  particles=particles.filter(p=>{
+    p.update();p.draw(fwCtx);return p.alpha>0;
+  });
+  requestAnimationFrame(animateFireworks);
+}
+
+function startFireworks(){
+  fwCanvas.style.display='block';
+  fwAnimating=true;
+  animateFireworks();
+  let count=0;
+  const interval=setInterval(()=>{
+    launchFirework();launchFirework();
+    count++;if(count>25){clearInterval(interval)}
+  },300);
+  setTimeout(()=>{fwAnimating=false;fwCanvas.style.display='none'},10000);
+}
+
+// ── Confetti ──
+function launchConfetti(){
+  const colors=['#ff6b6b','#ffd700','#ff69b4','#6a82fb','#fc5c7d','#f0c27f','#00ff88','#ff4757','#e056fd','#7bed9f'];
+  for(let i=0;i<80;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti';
+      c.style.left=Math.random()*100+'%';
+      c.style.top='-10px';
+      c.style.width=Math.random()*10+5+'px';
+      c.style.height=Math.random()*10+5+'px';
+      c.style.background=colors[Math.floor(Math.random()*colors.length)];
+      c.style.borderRadius=Math.random()>.5?'50%':'2px';
+      c.style.animationDuration=Math.random()*3+3+'s';
+      c.style.animationDelay=Math.random()*2+'s';
+      document.body.appendChild(c);
+      c.addEventListener('animationend',()=>c.remove());
+    },Math.random()*1500);
+  }
+}
+
+// ── Surprise ──
+function triggerSurprise(){
+  document.getElementById('surprisePrompt').style.display='none';
+  document.getElementById('surpriseContent').style.display='block';
+  startFireworks();
+  launchConfetti();
+  setTimeout(launchConfetti,2000);
+  setTimeout(launchConfetti,4000);
+  document.getElementById('surprise').scrollIntoView({behavior:'smooth',block:'center'});
+}
+</script>
+</body>
+</html>
