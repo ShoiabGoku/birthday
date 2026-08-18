@@ -261,6 +261,42 @@ section{
   color:#fc5c7d;font-style:normal;
 }
 
+/* ── Shayari Section ── */
+#shayari{
+  background:radial-gradient(ellipse at center,#1a0f2e 0%,#0a0a0f 70%);
+  min-height:80vh;
+}
+.shayari-box{
+  max-width:620px;width:100%;text-align:center;
+  padding:clamp(30px,5vw,50px);
+  background:linear-gradient(145deg,rgba(255,215,0,.04),rgba(252,92,125,.04));
+  border:1px solid rgba(255,215,0,.12);
+  border-radius:24px;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.shayari-ornament{
+  color:rgba(255,215,0,.35);font-size:1.4rem;
+  margin:8px 0;letter-spacing:8px;
+}
+.shayari-urdu{
+  font-size:clamp(1.3rem,3.5vw,1.8rem);
+  line-height:2.2;color:#ffd700;
+  margin:1.2rem 0;
+  text-shadow:0 0 30px rgba(255,215,0,.15);
+}
+.shayari-transliteration{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.95rem,2.5vw,1.15rem);
+  line-height:1.9;color:#c9a0dc;
+  margin:1.2rem 0;
+}
+.shayari-meaning{
+  font-family:'Poppins',sans-serif;font-weight:300;
+  font-size:clamp(.85rem,2vw,.95rem);
+  line-height:1.8;color:rgba(245,230,211,.5);
+  margin-top:1rem;
+}
+
 /* ── Flower Section ── */
 #flowerSection{
   background:radial-gradient(ellipse at center,#1e0a2e 0%,#0a0a0f 70%);
@@ -471,6 +507,26 @@ footer span{color:#fc5c7d}
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Shayari -->
+  <section id="shayari">
+    <div class="shayari-box reveal">
+      <div class="shayari-ornament">&#10022;</div>
+      <p class="shayari-urdu" dir="rtl" lang="ur">
+        &#1605;&#1604;&#1578;&#1746; &#1729;&#1740;&#1722; &#1604;&#1608;&#1711; &#1729;&#1586;&#1575;&#1585;&#1608;&#1722;&#1548; &#1605;&#1711;&#1585; &#1705;&#1670;&#1726; &#1604;&#1608;&#1711; &#1575;&#1604;&#1711; &#1729;&#1608;&#1578;&#1746; &#1729;&#1740;&#1722;<br>
+        &#1580;&#1608; &#1583;&#1604; &#1605;&#1740;&#1722; &#1576;&#1587; &#1580;&#1575;&#1574;&#1740;&#1722;&#1548; &#1608;&#1608;&#1729; &#1604;&#1608;&#1711; &#1575;&#1604;&#1711; &#1729;&#1608;&#1578;&#1746; &#1729;&#1740;&#1722;
+      </p>
+      <p class="shayari-transliteration">
+        "Milte hain log hazaaron, magar kuch log alag hote hain<br>
+        Jo dil mein bas jaayein, woh log alag hote hain"
+      </p>
+      <p class="shayari-meaning">
+        You meet thousands of people, but some are different &mdash;<br>
+        the ones who settle in your heart, they're the ones that stay.
+      </p>
+      <div class="shayari-ornament">&#10022;</div>
     </div>
   </section>
 
