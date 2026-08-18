@@ -640,89 +640,163 @@ function createPetal(){
 setInterval(createPetal,400);
 
 // ── Web Audio API Music ──
-let audioCtx, musicPlaying=false, musicNodes=[];
+let audioCtx, musicPlaying=false, melodyTimer=null, chordTimer=null;
+
+function createReverb(ctx){
+  const conv=ctx.createConvolver();
+  const len=ctx.sampleRate*2.5;
+  const buf=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let ch=0;ch<2;ch++){
+    const d=buf.getChannelData(ch);
+    for(let i=0;i<len;i++){
+      d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);
+    }
+  }
+  conv.buffer=buf;
+  return conv;
+}
+
+function playMusicBoxNote(ctx,freq,time,dur,dest){
+  var o1=ctx.createOscillator();
+  var o2=ctx.createOscillator();
+  var o3=ctx.createOscillator();
+  var g=ctx.createGain();
+  var filt=ctx.createBiquadFilter();
+  o1.type='sine'; o1.frequency.value=freq;
+  o2.type='sine'; o2.frequency.value=freq*2.001;
+  o3.type='sine'; o3.frequency.value=freq*3.002;
+  var mix1=ctx.createGain(); mix1.gain.value=0.5;
+  var mix2=ctx.createGain(); mix2.gain.value=0.15;
+  var mix3=ctx.createGain(); mix3.gain.value=0.05;
+  o1.connect(mix1); o2.connect(mix2); o3.connect(mix3);
+  mix1.connect(g); mix2.connect(g); mix3.connect(g);
+  filt.type='lowpass'; filt.frequency.value=2500;
+  filt.frequency.setTargetAtTime(800,time+0.05,dur*0.4);
+  g.connect(filt); filt.connect(dest);
+  g.gain.setValueAtTime(0,time);
+  g.gain.linearRampToValueAtTime(0.18,time+0.01);
+  g.gain.exponentialRampToValueAtTime(0.08,time+0.15);
+  g.gain.exponentialRampToValueAtTime(0.001,time+dur);
+  o1.start(time); o2.start(time); o3.start(time);
+  o1.stop(time+dur+0.1); o2.stop(time+dur+0.1); o3.stop(time+dur+0.1);
+}
 
 function createMusic(){
   audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  const master=audioCtx.createGain();
-  master.gain.value=0.12;
+  var master=audioCtx.createGain();
+  master.gain.value=0.35;
   master.connect(audioCtx.destination);
 
-  // Warm pad
-  const pad=audioCtx.createOscillator();
-  const padGain=audioCtx.createGain();
-  const padFilter=audioCtx.createBiquadFilter();
-  pad.type='sine';pad.frequency.value=220;
-  padFilter.type='lowpass';padFilter.frequency.value=800;
-  padGain.gain.value=0.3;
-  pad.connect(padFilter);padFilter.connect(padGain);padGain.connect(master);
-  pad.start();
-  musicNodes.push(pad);
+  var reverb=createReverb(audioCtx);
+  var reverbGain=audioCtx.createGain();
+  reverbGain.gain.value=0.3;
+  reverb.connect(reverbGain);
+  reverbGain.connect(master);
 
-  // Pad 2
-  const pad2=audioCtx.createOscillator();
-  const pad2Gain=audioCtx.createGain();
-  pad2.type='sine';pad2.frequency.value=277.18;
-  pad2Gain.gain.value=0.2;
-  pad2.connect(pad2Gain);pad2Gain.connect(master);
-  pad2.start();
-  musicNodes.push(pad2);
+  var dry=audioCtx.createGain();
+  dry.gain.value=0.7;
+  dry.connect(master);
 
-  // Gentle melody
-  const melody=[
-    329.63,392.00,440.00,523.25,493.88,440.00,392.00,349.23,
-    329.63,293.66,329.63,392.00,440.00,493.88,523.25,493.88,
-    440.00,392.00,349.23,329.63,293.66,261.63,293.66,329.63,
-    349.23,392.00,440.00,392.00,349.23,329.63,293.66,329.63
+  var melodyDest=audioCtx.createGain();
+  melodyDest.gain.value=1;
+  melodyDest.connect(dry);
+  melodyDest.connect(reverb);
+
+  // warm pad using detuned oscillators
+  var padGrp=audioCtx.createGain();
+  padGrp.gain.value=0.06;
+  padGrp.connect(master);
+  var padFilt=audioCtx.createBiquadFilter();
+  padFilt.type='lowpass'; padFilt.frequency.value=500;
+  padFilt.connect(padGrp);
+  var padOscs=[];
+  function makePadVoice(freq){
+    var o=audioCtx.createOscillator();
+    o.type='sine'; o.frequency.value=freq;
+    var d=audioCtx.createOscillator();
+    d.type='sine'; d.frequency.value=freq*1.003;
+    var g1=audioCtx.createGain(); g1.gain.value=0.5;
+    var g2=audioCtx.createGain(); g2.gain.value=0.5;
+    o.connect(g1); d.connect(g2);
+    g1.connect(padFilt); g2.connect(padFilt);
+    o.start(); d.start();
+    padOscs.push({o:o,d:d,freq:freq});
+  }
+  makePadVoice(130.81);
+  makePadVoice(196.00);
+  makePadVoice(261.63);
+
+  // melody: "Happy Birthday" inspired gentle tune, then a warm original loop
+  var phrases=[
+    [392,0.45],[392,0.35],[440,0.8],[392,0.8],[523.25,0.8],[493.88,1.4],
+    [0,0.3],
+    [392,0.45],[392,0.35],[440,0.8],[392,0.8],[587.33,0.8],[523.25,1.4],
+    [0,0.3],
+    [392,0.45],[392,0.35],[783.99,0.8],[659.25,0.8],[523.25,0.7],[493.88,0.7],[440,1.2],
+    [0,0.3],
+    [698.46,0.45],[698.46,0.35],[659.25,0.8],[523.25,0.8],[587.33,0.8],[523.25,1.6],
+    [0,0.8],
+    // gentle original continuation
+    [329.63,0.6],[392.00,0.6],[440.00,0.9],[0,0.2],
+    [523.25,0.6],[493.88,0.6],[440.00,0.9],[0,0.2],
+    [392.00,0.6],[349.23,0.6],[329.63,1.2],[0,0.3],
+    [293.66,0.6],[329.63,0.6],[392.00,0.9],[0,0.2],
+    [349.23,0.6],[329.63,0.6],[293.66,0.9],[0,0.2],
+    [261.63,0.6],[293.66,0.6],[329.63,1.5],[0,0.8]
   ];
-  const melOsc=audioCtx.createOscillator();
-  const melGain=audioCtx.createGain();
-  const melFilter=audioCtx.createBiquadFilter();
-  melOsc.type='triangle';
-  melFilter.type='lowpass';melFilter.frequency.value=1200;
-  melGain.gain.value=0;
-  melOsc.connect(melFilter);melFilter.connect(melGain);melGain.connect(master);
-  melOsc.start();
-  musicNodes.push(melOsc);
 
-  let noteIdx=0;
-  function playNote(){
-    if(!musicPlaying)return;
-    const freq=melody[noteIdx%melody.length];
-    melOsc.frequency.setTargetAtTime(freq,audioCtx.currentTime,0.05);
-    melGain.gain.setTargetAtTime(0.35,audioCtx.currentTime,0.05);
-    melGain.gain.setTargetAtTime(0.05,audioCtx.currentTime+0.6,0.3);
+  var chordProg=[
+    [[130.81,196.00,261.63],4.8],
+    [[146.83,220.00,293.66],4.8],
+    [[164.81,246.94,329.63],4.8],
+    [[130.81,196.00,261.63],4.8],
+    [[146.83,220.00,293.66],4.8],
+    [[174.61,261.63,349.23],4.8],
+    [[130.81,196.00,261.63],4.8],
+    [[146.83,196.00,246.94],4.8]
+  ];
+
+  var noteIdx=0;
+  function scheduleNote(){
+    if(!musicPlaying) return;
+    var note=phrases[noteIdx%phrases.length];
+    var freq=note[0], dur=note[1];
+    if(freq>0){
+      playMusicBoxNote(audioCtx,freq,audioCtx.currentTime,dur*1.8,melodyDest);
+    }
     noteIdx++;
-    setTimeout(playNote,800);
+    melodyTimer=setTimeout(scheduleNote,dur*700);
   }
-  playNote();
+  scheduleNote();
 
-  // Gentle chord changes for pad
-  const chords=[
-    [220,277.18],[246.94,311.13],[261.63,329.63],[220,277.18]
-  ];
-  let chordIdx=0;
-  function changeChord(){
-    if(!musicPlaying)return;
-    const ch=chords[chordIdx%chords.length];
-    pad.frequency.setTargetAtTime(ch[0],audioCtx.currentTime,0.5);
-    pad2.frequency.setTargetAtTime(ch[1],audioCtx.currentTime,0.5);
+  var chordIdx=0;
+  function scheduleChord(){
+    if(!musicPlaying) return;
+    var ch=chordProg[chordIdx%chordProg.length];
+    var freqs=ch[0], dur=ch[1];
+    var t=audioCtx.currentTime;
+    for(var i=0;i<padOscs.length&&i<freqs.length;i++){
+      padOscs[i].o.frequency.setTargetAtTime(freqs[i],t,0.8);
+      padOscs[i].d.frequency.setTargetAtTime(freqs[i]*1.003,t,0.8);
+    }
     chordIdx++;
-    setTimeout(changeChord,3200);
+    chordTimer=setTimeout(scheduleChord,dur*700);
   }
-  changeChord();
+  scheduleChord();
 }
 
 function toggleMusic(){
-  const btn=document.getElementById('musicToggle');
+  var btn=document.getElementById('musicToggle');
   if(!musicPlaying){
-    if(!audioCtx)createMusic();
-    else audioCtx.resume();
+    if(!audioCtx){createMusic();}
+    else{audioCtx.resume();createMusic();}
     musicPlaying=true;
     btn.classList.add('playing');
     btn.innerHTML='&#9835;';
   }else{
     musicPlaying=false;
+    clearTimeout(melodyTimer);
+    clearTimeout(chordTimer);
     if(audioCtx)audioCtx.suspend();
     btn.classList.remove('playing');
     btn.innerHTML='&#9834;';
